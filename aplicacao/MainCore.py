@@ -5,7 +5,7 @@
  | \  / | __ _ _ _ __   | |     ___  _ __ ___ 
  | |\/| |/ _` | | '_ \  | |    / _ \| '__/ _ \
  | |  | | (_| | | | | | | |___| (_) | | |  __/
- |_|  |_|\__,_|_|_| |_|  \_____\___/|_|  \___| v 0.5.1
+ |_|  |_|\__,_|_|_| |_|  \_____\___/|_|  \___| v 0.5.2
                           
 """
 
@@ -202,14 +202,12 @@ class MainCore:
    #? aplica o atrito no bloco
     def applyFriction(self, current_ce, current_block_vel):
         self.friction_force = self.dynamic_friction_coefficient * self.block_weight
-        self.friction_d = self.friction_d + (abs(self.block_vel.x) * self.dt)
+        self.friction_d = (self.friction_d + (abs(self.block_vel.x) * self.dt))
         self.work = math.ceil(-self.friction_force * self.friction_d)
-        
         ce = self.ce + (self.work * self.dt)
-        print("==>> self.work: ", self.work)
     
         #! self.block_vel.x = self.block_vel.x + sqrt((2 * ce)/ self.block_mass) * self.dt
-        if not ce <= 0: self.block_vel.x = math.ceil((ce * current_block_vel)) /  current_ce
+        if not ce <= 0: self.block_vel.x = (ce * current_block_vel) /  current_ce
         else:
             self.block_vel.x = 0
     
@@ -245,7 +243,7 @@ class MainCore:
                 self.checkSpringLimit()
                 self.checkSpringComportament()
                 
-                if self.checkSpringColision() or self.is_block_repelled:
+                if self.checkSpringColision() or self.block_vel.x > 0:
                         self.updateSpring()
                         self.calcBlockVelOnSpring()
                         self.calcEnergy()
